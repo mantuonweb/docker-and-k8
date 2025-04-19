@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  angular:
+    image: angular:latest  # Specify the image name
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: angular  # Specify the container name
+    ports:
+      - "4400:4400"
+    volumes:
+      - ./ngdemo:/usr/src/app/ngdemo:rw  # Use named volume 'ngapp'
+    command: sh -c "cd ngdemo && npm install && npm run start"
+    networks:
+      - application  # Attach the service to the 'application' network
+
+# volumes:
+#   ngapp:
+#     driver: local  # Use the default local driver
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: ./ngdemo  # Source directory on the host
+
+networks:
+  application:
+    name: application  # Explicitly name the network as 'application'
+    driver: bridge  # Use the default bridge network driver
+
+# docker-compose -p application up -d --build

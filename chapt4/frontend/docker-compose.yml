@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: frontend
+    image: frontend:latest
+    ports:
+      - "3300:80"
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    networks:
+      - application
+
+# docker-compose -p frontend up -d --build

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - application
+
+  backend:
+    build:
+      context: ./backend
+    image: backend:latest # Add this line to specify the image name
+    container_name: backend
+    ports:
+      - "3000:3000"
+    networks:
+      - application
+    environment:
+      - MONGO_URI=mongodb://root:example@mongodb:27017/test
+
+  frontend:
+    build:
+      context: ./frontend
+    image: frontend:latest # Add this line to specify the image name
+    container_name: frontend
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+    ports:
+      - "3300:80"
+    networks:
+      - application
+
+volumes:
+  mongodb_data:
+
+networks:
+  application:
+    driver: overlay
+    name: application-network
+
+# docker swarm init
+# docker stack deploy -c docker-compose-swarm.yml application

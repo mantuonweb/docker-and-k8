@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mongodb:
+    extends:
+      file: ./database/docker-compose.yml
+      service: mongodb
+
+  backend:
+    extends:
+      file: ./backend/docker-compose.yml
+      service: backend
+
+  frontend:
+    extends:
+      file: ./frontend/docker-compose.yml
+      service: frontend
+
+volumes:
+  mongodb_data:
+
+networks:
+  application:
+    name: application-network
+
+# docker-compose -p application up -d --build
